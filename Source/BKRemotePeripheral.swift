@@ -91,6 +91,16 @@ public class BKRemotePeripheral: BKRemotePeer, BKCBPeripheralDelegate {
     public var name: String? {
         return peripheral?.name
     }
+    
+    public var serviceUUIDs: [String] {
+        guard let services = peripheral?.services else { return [] }
+        return services.map { $0.uuid.uuidString }
+    }
+    
+    public func charateristicsUUIDs(_ serviceIndex: Int) -> [String] {
+        guard let charateristics = peripheral?.services?[serviceIndex].characteristics else { return [] }
+        return charateristics.map { $0.uuid.uuidString }
+    }
 
     /// The remote peripheral's delegate.
     public weak var peripheralDelegate: BKRemotePeripheralDelegate?

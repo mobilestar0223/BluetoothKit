@@ -41,7 +41,7 @@ internal class BKScanner: BKCBCentralManagerDiscoveryDelegate {
 
     // MARK: Properties
 
-    internal var configuration: BKConfiguration!
+    internal var configuration: BKConfiguration?
     internal var centralManager: CBCentralManager!
     private var busy = false
     private var scanHandlers: (progressHandler: BKCentral.ScanProgressHandler?, completionHandler: ScanCompletionHandler )?
@@ -55,7 +55,11 @@ internal class BKScanner: BKCBCentralManagerDiscoveryDelegate {
             try validateForActivity()
             busy = true
             scanHandlers = ( progressHandler: progressHandler, completionHandler: completionHandler)
-            centralManager.scanForPeripherals(withServices: configuration.serviceUUIDs, options: nil)
+            if configuration == nil {
+                centralManager.scanForPeripherals(withServices: nil, options: nil)
+            } else {
+                centralManager.scanForPeripherals(withServices: configuration!.serviceUUIDs, options: nil)
+            }
             durationTimer = Timer.scheduledTimer(timeInterval: duration, target: self, selector: #selector(BKScanner.durationTimerElapsed), userInfo: nil, repeats: false)
         } catch let error {
             throw error

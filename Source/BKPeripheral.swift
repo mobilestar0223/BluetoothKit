@@ -96,6 +96,7 @@ public class BKPeripheral: BKPeer, BKCBPeripheralManagerDelegate, BKAvailability
     private var peripheralManagerDelegate: BKCBPeripheralManagerDelegateProxy!
     private var characteristicData: CBMutableCharacteristic!
     private var dataService: CBMutableService!
+    private var advertisingData : [String: Any]?
 
     // MARK: Initialization
 
@@ -231,7 +232,8 @@ public class BKPeripheral: BKPeer, BKCBPeripheralManagerDelegate, BKAvailability
 
     internal func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
         if !peripheralManager.isAdvertising {
-            var advertisementData: [String: Any] = [ CBAdvertisementDataServiceUUIDsKey: _configuration.serviceUUIDs ]
+            var advertisementData: [String: Any] = [ CBAdvertisementDataServiceUUIDsKey: _configuration.serviceUUIDs, "UserData": advertisingData ?? [:]]
+
             if let localName = _configuration.localName {
                 advertisementData[CBAdvertisementDataLocalNameKey] = localName
             }

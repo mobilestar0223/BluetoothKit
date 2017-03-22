@@ -93,7 +93,12 @@ public class BKCentral: BKPeer, BKCBCentralManagerStateDelegate, BKConnectionPoo
     }
 
     override public var configuration: BKConfiguration? {
-        return _configuration
+        get {
+            return _configuration
+        }
+        set {
+            _configuration = newValue
+        }
     }
 
     /// The delegate of the BKCentral object.
@@ -151,6 +156,21 @@ public class BKCentral: BKPeer, BKCBCentralManagerStateDelegate, BKConnectionPoo
             _configuration = configuration
             _centralManager = CBCentralManager(delegate: centralManagerDelegate, queue: nil, options: nil)
             scanner.configuration = configuration
+            scanner.centralManager = centralManager
+            connectionPool.centralManager = centralManager
+        } catch let error {
+            throw BKError.internalError(underlyingError: error)
+        }
+    }
+    
+    /**
+     Start the BKCentral object without a configuration.
+     - throws: Throws an InternalError if the BKCentral object is already started.
+     */
+    public func startWithConfiguration() throws {
+        do {
+            try stateMachine.handleEvent(.start)
+            _centralManager = CBCentralManager(delegate: centralManagerDelegate, queue: nil, options: nil)
             scanner.centralManager = centralManager
             connectionPool.centralManager = centralManager
         } catch let error {
