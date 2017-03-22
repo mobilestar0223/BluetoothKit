@@ -96,7 +96,8 @@ public class BKPeripheral: BKPeer, BKCBPeripheralManagerDelegate, BKAvailability
     private var peripheralManagerDelegate: BKCBPeripheralManagerDelegateProxy!
     private var characteristicData: CBMutableCharacteristic!
     private var dataService: CBMutableService!
-    private var advertisingData : [String: Any]?
+    
+    public var advertisingData : [String: Any]?
 
     // MARK: Initialization
 
